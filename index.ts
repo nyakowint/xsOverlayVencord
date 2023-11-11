@@ -114,24 +114,25 @@ const settings = definePluginSettings({
     },
 });
 
-const Native = VencordNative.pluginHelpers.XsOverlayVencord as PluginNative<typeof import("./native")>;
+const Native = VencordNative.pluginHelpers.XsOverlay as PluginNative<typeof import("./native")>;
 
 export default definePlugin({
     name: "XSOverlay",
-    description: "[UserPlugin Version] Forwards discord notifications to XSOverlay, for easy viewing in VR",
-    authors: [{name: "Nyako", id: 0n /*lazy*/}],
+    description: "Forwards discord notifications to XSOverlay, for easy viewing in VR",
+    authors: [Devs.Nyako],
     tags: ["vr", "notify"],
     settings,
     flux: {
         CALL_UPDATE({ call }: { call: Call; }) {
-            if (call.ringing.includes(UserStore.getCurrentUser().id)) {
+            if (call?.ringing?.includes(UserStore.getCurrentUser().id)) {
                 const channel = ChannelStore.getChannel(call.channel_id);
                 sendOtherNotif("Incoming call", `${channel.name} is calling you...`);
             }
         },
-        MESSAGE_CREATE({ message }: { message: Message; }) {
+        MESSAGE_CREATE({ message, optimistic }: { message: Message; optimistic: boolean; }) {
             // Apparently without this try/catch, discord's socket connection dies if any part of this errors
             try {
+                if (optimistic) return;
                 const channel = ChannelStore.getChannel(message.channel_id);
                 if (!shouldNotify(message, channel)) return;
 
