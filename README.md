@@ -19,3 +19,6 @@ If you open an issue here I am more likely to see it. ONLY FOR THIS PLUGIN. Venc
 - Set plugin settings as desired
 - Open XSOverlay
 - get ping spammed
+
+## Snooping around my profile?
+Check out my other goofy thing for this overlay, https://github.com/nyakowint/xsoverlay-keyboard-osc
