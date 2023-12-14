@@ -80,6 +80,21 @@ const settings = definePluginSettings({
         description: "Ignore messages from bots",
         default: false
     },
+    ignoreServers: {
+        type: OptionType.BOOLEAN,
+        description: "Ignore messages from servers (DMs only)",
+        default: false
+    },
+    ignoreGroupDMs: {
+        type: OptionType.BOOLEAN,
+        description: "Ignore messages from group DMs",
+        default: false
+    },
+    ignoreCalls: {
+        type: OptionType.BOOLEAN,
+        description: "Ignore call notifications",
+        default: false
+    },
     pingColor: {
         type: OptionType.STRING,
         description: "User mention color",
@@ -114,17 +129,17 @@ const settings = definePluginSettings({
     },
 });
 
-const Native = VencordNative.pluginHelpers.XsOverlayVencord as PluginNative<typeof import("./native")>;
+const Native = VencordNative.pluginHelpers.XsOverlay as PluginNative<typeof import("./native")>;
 
 export default definePlugin({
     name: "XSOverlay",
-    description: "[UserPlugin Version] Forwards discord notifications to XSOverlay, for easy viewing in VR",
-    authors: [{ name: "Nyako", id: 0n }],
+    description: "Forwards discord notifications to XSOverlay, for easy viewing in VR",
+    authors: [Devs.Nyako],
     tags: ["vr", "notify"],
     settings,
     flux: {
         CALL_UPDATE({ call }: { call: Call; }) {
-            if (call?.ringing?.includes(UserStore.getCurrentUser().id)) {
+            if (call?.ringing?.includes(UserStore.getCurrentUser().id) && !settings.store.ignoreCalls) {
                 const channel = ChannelStore.getChannel(call.channel_id);
                 sendOtherNotif("Incoming call", `${channel.name} is calling you...`);
             }
@@ -221,6 +236,7 @@ export default definePlugin({
                     }
                 }
 
+                if (shouldIgnore(message, channel)) return;
                 sendMsgNotif(titleString, finalMsg, message);
             } catch (err) {
                 XSLog.error(`Failed to catch MESSAGE_CREATE: ${err}`);
@@ -228,6 +244,18 @@ export default definePlugin({
         }
     }
 });
+
+function shouldIgnore(channel: Channel) {
+    switch (channel.type) {
+        case ChannelTypes.DM:
+            if (settings.store.ignoreServers) return false;
+            break;
+        case ChannelTypes.GROUP_DM:
+            if (settings.store.ignoreGroupDMs) return true;
+            break;
+    }
+    return false;
+}
 
 function sendMsgNotif(titleString: string, content: string, message: Message) {
     fetch(`https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png?size=128`).then(response => response.arrayBuffer()).then(result => {
@@ -286,3 +314,4 @@ function calculateHeight(content: string) {
 function cleanMessage(content: string) {
     return content.replace(new RegExp("<[^>]*>", "g"), "");
 }
+
