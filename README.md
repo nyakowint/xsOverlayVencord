@@ -15,6 +15,8 @@ If you open an issue here I am more likely to see it. ONLY FOR THIS PLUGIN. Venc
 ![](https://github.com/Vendicated/Vencord/assets/24845294/f15eff61-2d52-4620-bcab-808ecb1606d2)
 
 ## Usage
+- Clone as "xsOverlay" or "xsOverlay.desktop"
+- pnpm build
 - Enable this plugin
 - Set plugin settings as desired
 - Open XSOverlay
