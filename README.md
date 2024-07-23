@@ -14,13 +14,12 @@ If you open an issue here I am more likely to see it. But ONLY FOR THIS PLUGIN. 
 
 ![](https://github.com/Vendicated/Vencord/assets/24845294/f15eff61-2d52-4620-bcab-808ecb1606d2)
 
-## Usage
-- git clone as `xsOverlay` or `xsOverlay.desktop` (or else native side wont work)
-- `pnpm build`
-- Enable this plugin
+## Installation/Usage
+- [Read the docs](https://docs.vencord.dev/installing/custom-plugins/) to setup custom plugins
+- Enable the XSOverlay plugin
 - Set plugin settings as desired
-- Open XSOverlay
-- get ping spammed
+- Open SteamVR and XSOverlay
+- Done
 
 ## Snooping around my profile?
 Check out my other goofy thing for this overlay, https://github.com/nyakowint/xsoverlay-keyboard-osc
